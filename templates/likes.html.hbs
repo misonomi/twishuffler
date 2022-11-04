@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Twitter Likes Shuffler</title>
+  </head>
+  <body>
+    <header>
+      {{> nav}}
+    </header>
+    <main>
+      {{~#each likes}}
+        {{> tweet this}}
+      {{/each}}
+    </main>
+  </body>
+</html>
