@@ -1,8 +1,9 @@
-use crate::errors::Error;
+use crate::{errors::Error, cookie::new_cookie};
 use rocket::{
-    http::{Cookie, CookieJar, SameSite},
+    get,
+    http::{Cookie, CookieJar},
     response::Redirect,
-    State,
+    FromForm, State,
 };
 use twitter_v2::{
     authorization::{Oauth2Client, Scope},
@@ -24,20 +25,8 @@ pub fn authorize(client: &State<Oauth2Client>, cookies: &CookieJar<'_>) -> Redir
         [Scope::TweetRead, Scope::UsersRead, Scope::LikeRead],
     );
 
-    cookies.add(
-        Cookie::build("verifier", verifier.secret().clone())
-            .path("/")
-            .secure(true)
-            .same_site(SameSite::Lax)
-            .finish(),
-    );
-    cookies.add(
-        Cookie::build("state", state.secret().clone())
-            .path("/")
-            .secure(true)
-            .same_site(SameSite::Lax)
-            .finish(),
-    );
+    cookies.add(new_cookie("verifier", verifier.secret().clone()));
+    cookies.add(new_cookie("state", state.secret().clone()));
 
     Redirect::to(url.to_string())
 }
@@ -86,13 +75,7 @@ pub async fn callback(
         }
     };
 
-    cookies.add(
-        Cookie::build("token", token_str)
-            .path("/")
-            .secure(true)
-            .same_site(SameSite::Lax)
-            .finish(),
-    );
+    cookies.add(new_cookie("token", token_str));
     cookies.remove(Cookie::named("state"));
     cookies.remove(Cookie::named("verifier"));
 

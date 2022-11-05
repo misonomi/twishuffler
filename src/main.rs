@@ -1,9 +1,12 @@
-#[macro_use]
-extern crate rocket;
+use rocket::{
+    fs::{relative, FileServer},
+    get, launch, routes,
+};
 use rocket_dyn_templates::{context, Template};
 use std::env;
 use twitter_v2::{authorization::Oauth2Client, oauth2::url::Url};
 
+mod cookie;
 mod errors;
 mod lists;
 mod oauth;
