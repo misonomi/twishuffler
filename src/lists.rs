@@ -13,7 +13,7 @@ use crate::{errors::Error, structs};
 
 #[get("/likes")]
 pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
-    let token = match cookies.get("token") {
+    let token = match cookies.get_private("token") {
         Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
             Ok(t) => t,
             Err(e) => {

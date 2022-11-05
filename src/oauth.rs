@@ -25,8 +25,8 @@ pub fn authorize(client: &State<Oauth2Client>, cookies: &CookieJar<'_>) -> Redir
         [Scope::TweetRead, Scope::UsersRead, Scope::LikeRead],
     );
 
-    cookies.add(new_cookie("verifier", verifier.secret().clone()));
-    cookies.add(new_cookie("state", state.secret().clone()));
+    cookies.add_private(new_cookie("verifier", verifier.secret().clone()));
+    cookies.add_private(new_cookie("state", state.secret().clone()));
 
     Redirect::to(url.to_string())
 }
@@ -37,7 +37,7 @@ pub async fn callback(
     callback: Callback<'_>,
     cookies: &CookieJar<'_>,
 ) -> Result<Redirect, Error> {
-    match cookies.get("state") {
+    match cookies.get_private("state") {
         Some(state) => {
             if state.value() != callback.state {
                 return Err(Error::StateUnmatch);
@@ -48,7 +48,7 @@ pub async fn callback(
         }
     };
 
-    let verifier = match cookies.get("verifier") {
+    let verifier = match cookies.get_private("verifier") {
         Some(v) => v,
         None => {
             return Err(Error::NoVerifier);
@@ -75,9 +75,9 @@ pub async fn callback(
         }
     };
 
-    cookies.add(new_cookie("token", token_str));
-    cookies.remove(Cookie::named("state"));
-    cookies.remove(Cookie::named("verifier"));
+    cookies.add_private(new_cookie("token", token_str));
+    cookies.remove_private(Cookie::named("state"));
+    cookies.remove_private(Cookie::named("verifier"));
 
     Ok(Redirect::to("/likes"))
 }
