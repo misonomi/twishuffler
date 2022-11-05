@@ -3,7 +3,9 @@
   <div class="text">{{text}}</div>
   <div class="image">
     {{~#each media}}
-      <img src={{this.url}} />
+      <a href={{this.url}} target="_blank">
+        <img src={{this.url}} />
+      </a>
     {{/each}}
   </div>
 </div>
