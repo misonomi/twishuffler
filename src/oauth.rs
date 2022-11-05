@@ -22,7 +22,7 @@ pub fn authorize(client: &State<Oauth2Client>, cookies: &CookieJar<'_>) -> Redir
 
     let (url, state) = client.auth_url(
         challenge,
-        [Scope::TweetRead, Scope::UsersRead, Scope::LikeRead],
+        [Scope::TweetRead, Scope::UsersRead, Scope::LikeRead, Scope::BookmarkRead],
     );
 
     cookies.add_private(new_cookie("verifier", verifier.secret().clone()));

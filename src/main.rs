@@ -14,7 +14,7 @@ mod structs;
 
 #[get("/")]
 async fn index() -> Template {
-    Template::render("top", context! { title: "top" })
+    Template::render("top", context! {})
 }
 
 #[get("/error?<reason>")]
