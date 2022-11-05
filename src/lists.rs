@@ -16,7 +16,7 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
         Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
             Ok(t) => t,
             Err(e) => {
-                println! {"{}", e};
+                println! {"{:?}", e};
                 return Err(Error::DeserializeToken);
             }
         },
@@ -30,7 +30,7 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
     let me = match api.get_users_me().send().await {
         Ok(res) => res.into_data().unwrap(),
         Err(e) => {
-            println! {"{}", e};
+            println! {"{:?}", e};
             return Err(Error::GetMeAPI);
         }
     };
@@ -53,7 +53,7 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
             .map(|t| structs::Tweet::from(t, res.includes().map(|e| e.media.as_ref()).flatten()))
             .collect(),
         Err(e) => {
-            println! {"{}", e};
+            println! {"{:?}", e};
             return Err(Error::GetLikesAPI);
         }
     };
@@ -70,7 +70,7 @@ pub async fn bookmarks(cookies: &CookieJar<'_>) -> Result<Template, Error> {
         Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
             Ok(t) => t,
             Err(e) => {
-                println! {"{}", e};
+                println! {"{:?}", e};
                 return Err(Error::DeserializeToken);
             }
         },
@@ -84,7 +84,7 @@ pub async fn bookmarks(cookies: &CookieJar<'_>) -> Result<Template, Error> {
     let me = match api.get_users_me().send().await {
         Ok(res) => res.into_data().unwrap(),
         Err(e) => {
-            println! {"{}", e};
+            println! {"{:?}", e};
             return Err(Error::GetMeAPI);
         }
     };
@@ -107,7 +107,7 @@ pub async fn bookmarks(cookies: &CookieJar<'_>) -> Result<Template, Error> {
             .map(|t| structs::Tweet::from(t, res.includes().map(|e| e.media.as_ref()).flatten()))
             .collect(),
         Err(e) => {
-            println! {"{}", e};
+            println! {"{:?}", e};
             return Err(Error::GetLikesAPI);
         }
     };

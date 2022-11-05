@@ -70,12 +70,12 @@ pub async fn callback(
         Ok(token) => match serde_json::to_string(&token) {
             Ok(token_str) => token_str,
             Err(e) => {
-                println! {"{}", e};
+                println! {"{:?}", e};
                 return Err(Error::SerializeToken);
             }
         },
         Err(e) => {
-            println! {"{}", e};
+            println! {"{:?}", e};
             return Err(Error::RequestTokenAPI);
         }
     };
