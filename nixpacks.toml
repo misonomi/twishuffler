@@ -1,2 +1,2 @@
 [phases.setup]
-nixPkgs = ["gcc", "rust-bin.nightly.latest.default", "binutils"]
+nixPkgs = ["gcc", "rust-bin.nightly.latest.default"]
