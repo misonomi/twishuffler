@@ -4,8 +4,7 @@ use rocket::http::CookieJar;
 use rocket_dyn_templates::{context, Template};
 use twitter_v2::{
     authorization::Oauth2Token,
-    data::Expansions,
-    query::{GetRelatedTweetsRequestBuilder, MediaField, TweetExpansion, TweetField},
+    query::{MediaField, TweetExpansion},
     TwitterApi,
 };
 
@@ -62,10 +61,7 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
     let mut rng = thread_rng();
     likes.shuffle(&mut rng);
 
-    Ok(Template::render(
-        "list",
-        context! { tweets: likes },
-    ))
+    Ok(Template::render("list", context! { tweets: likes }))
 }
 
 #[get("/bookmarks")]
