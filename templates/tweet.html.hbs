@@ -1,10 +1,9 @@
-<div>
-  <div>{{text}}</div>
-  <div>{{author}}</div>
-  <div>
+<div class="tweet">
+  <div class="author">{{author}}</div>
+  <div class="text">{{text}}</div>
+  <div class="image">
     {{~#each media}}
       <img src={{this.url}} />
     {{/each}}
   </div>
-  <br>
 </div>

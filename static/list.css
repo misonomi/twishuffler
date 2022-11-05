@@ -1,0 +1,28 @@
+.tweet {
+    display: grid;
+    grid-template-columns: 4em auto;
+    grid-template-rows: 1em auto;
+    grid-template-areas:
+        "author text"
+        "image image";
+    align-items: center;
+    color: white;
+
+    margin: .5em;
+    padding: 1em;
+
+    border: 3px solid rgb(0, 30, 48);
+    border-radius: 1em;
+}
+
+.tweet .author {
+    grid-area: author;
+}
+
+.tweet .text {
+    grid-area: text;
+}
+
+.tweet .image {
+    grid-area: image;
+}

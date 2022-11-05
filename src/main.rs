@@ -32,6 +32,7 @@ fn rocket() -> _ {
 
     rocket::build()
         .manage(client)
+        .mount("/static", FileServer::from(relative!("static")))
         .mount(
             "/",
             routes![
