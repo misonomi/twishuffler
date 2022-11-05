@@ -1,2 +1,5 @@
 [phases.setup]
 nixPkgs = ["gcc", "rust-bin.nightly.latest.default"]
+
+[phases.build]
+cmds = ['rm -rf ~/.cargo/git', 'rm -rf ~/.cargo/registry', "..."]
