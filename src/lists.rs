@@ -1,6 +1,13 @@
+use rand::{seq::SliceRandom, thread_rng};
+use rocket::get;
 use rocket::http::CookieJar;
 use rocket_dyn_templates::{context, Template};
-use twitter_v2::{authorization::Oauth2Token, TwitterApi, query::{GetRelatedTweetsRequestBuilder, TweetField, MediaField, TweetExpansion}, data::Expansions};
+use twitter_v2::{
+    authorization::Oauth2Token,
+    data::Expansions,
+    query::{GetRelatedTweetsRequestBuilder, MediaField, TweetExpansion, TweetField},
+    TwitterApi,
+};
 
 use crate::{errors::Error, structs};
 
@@ -29,16 +36,31 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
         }
     };
 
-    let likes: Vec<structs::Tweet> = match api.get_user_liked_tweets(me.id).expansions(vec!(TweetExpansion::AttachmentsMediaKeys)).media_fields(vec!(MediaField::MediaKey, MediaField::Url, MediaField::PreviewImageUrl)).send().await {
-        Ok(res) => {
-            let media = res.includes().map(|e| e.media.as_ref()).flatten();
-            res.data().unwrap().iter().map(|t| structs::Tweet::from(t, media)).collect()
-        },
+    let mut likes: Vec<structs::Tweet> = match api
+        .get_user_liked_tweets(me.id)
+        .expansions(vec![TweetExpansion::AttachmentsMediaKeys])
+        .media_fields(vec![
+            MediaField::MediaKey,
+            MediaField::Url,
+            MediaField::PreviewImageUrl,
+        ])
+        .send()
+        .await
+    {
+        Ok(res) => res
+            .data()
+            .unwrap_or(&vec![])
+            .iter()
+            .map(|t| structs::Tweet::from(t, res.includes().map(|e| e.media.as_ref()).flatten()))
+            .collect(),
         Err(e) => {
             println! {"{}", e};
             return Err(Error::GetLikesAPI);
         }
     };
+
+    let mut rng = thread_rng();
+    likes.shuffle(&mut rng);
 
     Ok(Template::render(
         "likes",
