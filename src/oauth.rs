@@ -1,4 +1,4 @@
-use crate::{errors::Error, cookie::new_cookie};
+use crate::{cookie::new_cookie, errors::Error};
 use rocket::{
     get,
     http::{Cookie, CookieJar},
