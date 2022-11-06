@@ -51,19 +51,30 @@ a.button {
     height: 2em;
 }
 
-.error {
+.container {
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
-    border: 2px solid rgb(204, 75, 25);
     border-radius: 1em;
     padding: 2em 4em;
 }
 
-.error .reason {
+.container.error {
+    border: 2px solid rgb(204, 75, 25);
+}
+
+.container.info {
+    border: 2px solid rgb(63, 177, 81);
+}
+
+.container.error .reason {
     background: black;
     border-radius: 4px;
     font-size: .75rem;
     padding: .5em 2em;
+}
+
+li {
+    line-height: 2.5em;
 }
