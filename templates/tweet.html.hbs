@@ -1,11 +1,15 @@
 <div class="tweet">
-  <div class="author">{{author}}</div>
+  <a class="source button" href="https://twitter.com/{{author}}/status/{{id}}" target="_blank">
+    <i class="material-icons">anchor</i>
+  </a>
   <div class="text">{{text}}</div>
   <div class="image">
     {{~#each media}}
-      <a href={{this.url}} target="_blank">
-        <img src={{this.url}} />
-      </a>
+      {{#if this.url}}
+        <a href={{this.url}} target="_blank">
+          <img src={{this.url}} />
+        </a>
+      {{/if}}
     {{/each}}
   </div>
 </div>

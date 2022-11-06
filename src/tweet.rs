@@ -1,9 +1,10 @@
 use rocket::serde::{Deserialize, Serialize};
-use twitter_v2::{data::Expansions, Media};
+use twitter_v2::{data::Expansions, Media, id::NumericId};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
 #[serde(crate = "rocket::serde")]
 pub struct Tweet {
+    pub id: NumericId,
     pub author: String,
     pub text: String,
     pub media: Vec<Media>,
@@ -46,6 +47,7 @@ impl Tweet {
             .to_string();
 
         Tweet {
+            id: tweet.id,
             author: author,
             text: tweet.text.clone(),
             media: media,

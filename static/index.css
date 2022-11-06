@@ -1,5 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Oxanium&family=Material+Icons&display=swap');
+
+:root {
+    font-family: 'Oxanium', 'Kosugi Maru', cursive;
+}
+
 body {
     background-color: rgb(59, 59, 66);
+    color: white;
 }
 
 main {
@@ -45,17 +52,18 @@ a.button {
     -moz-appearance: button;
     appearance: button;
     text-decoration: none;
+
+    color: white;
 }
 
 .button.connect {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     border: 1px solid rgb(29, 50, 72);
     border-radius: 4px;
     height: 4em;
     width: 16em;
-    margin: 4em;
     font-size: 1.2rem;
 
     background-color: rgb(0, 189, 163);
@@ -66,4 +74,9 @@ a.button {
 .button.connect:hover {
     background-color: rgb(196, 124, 124);
     color: rgb(0, 0, 5);
+    justify-content: space-evenly;
+}
+
+.spacer {
+    height: 4em;
 }
