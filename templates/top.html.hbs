@@ -12,11 +12,22 @@
       <h2>Twitter Likes Shuffler</h2>
       <div>Twitterアカウントと接続すると, いいね欄とブックマーク欄をシャッフルしたものを見ることができます</div>
       <div class="spacer"></div>
+      <div class="spacer"></div>
       <a class="button connect" href="authorize">
         <i class="material-icons">cable</i>
         Connect
         <i class="material-icons">cable</i>
       </a>
+      <div class="spacer"></div>
+      <div class="spacer"></div>
+      {{#if error}}
+        <div class="error">
+          <h3>何かがうまくいきませんでした</h3>
+          <i class="material-icons">pest_control</i>
+          <p class="reason">{{error}}</p>
+          <p>もう一度接続し直してみてください</p>
+        </div>
+      {{/if}}
     </main>
   </body>
 </html>

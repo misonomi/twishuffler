@@ -20,7 +20,7 @@ async fn index() -> Template {
 
 #[get("/error?<reason>")]
 async fn error(reason: &str) -> Template {
-    Template::render("top", context! { title: reason })
+    Template::render("top", context! { error: reason })
 }
 
 #[launch]
