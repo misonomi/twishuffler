@@ -78,11 +78,11 @@ pub async fn list(
     match listtype {
         ListType::Likes => Ok(Template::render(
             "list",
-            context! { tweets: tweets, next: context! { likes: next }},
+            context! { title:"Likes", tweets: tweets, next: context! { likes: next }},
         )),
         ListType::Bookmarks => Ok(Template::render(
             "list",
-            context! { tweets: tweets, next: context! { bookmarks: next } },
+            context! { title:"Bookmarks", tweets: tweets, next: context! { bookmarks: next } },
         )),
     }
 }
