@@ -8,10 +8,10 @@ use twitter_v2::{
     TwitterApi,
 };
 
-use crate::{errors::Error, structs};
+use crate::{errors::Error, list_type::ListType, tweet};
 
-#[get("/likes")]
-pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
+#[get("/<listtype>")]
+pub async fn list(listtype: ListType, cookies: &CookieJar<'_>) -> Result<Template, Error> {
     let token = match cookies.get_private("token") {
         Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
             Ok(t) => t,
@@ -35,9 +35,12 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
         }
     };
 
-    let mut likes: Vec<structs::Tweet> = match api
-        .get_user_liked_tweets(me.id)
-        .expansions(vec![TweetExpansion::AttachmentsMediaKeys])
+    let mut likes: Vec<tweet::Tweet> = match listtype
+        .request_builder(api, me.id)
+        .expansions(vec![
+            TweetExpansion::AttachmentsMediaKeys,
+            TweetExpansion::AuthorId,
+        ])
         .media_fields(vec![
             MediaField::MediaKey,
             MediaField::Url,
@@ -50,7 +53,7 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
             .data()
             .unwrap_or(&vec![])
             .iter()
-            .map(|t| structs::Tweet::from(t, res.includes().map(|e| e.media.as_ref()).flatten()))
+            .map(|t| tweet::Tweet::from(t, res.includes()))
             .collect(),
         Err(e) => {
             println! {"{:?}", e};
@@ -62,58 +65,4 @@ pub async fn likes(cookies: &CookieJar<'_>) -> Result<Template, Error> {
     likes.shuffle(&mut rng);
 
     Ok(Template::render("list", context! { tweets: likes }))
-}
-
-#[get("/bookmarks")]
-pub async fn bookmarks(cookies: &CookieJar<'_>) -> Result<Template, Error> {
-    let token = match cookies.get_private("token") {
-        Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
-            Ok(t) => t,
-            Err(e) => {
-                println! {"{:?}", e};
-                return Err(Error::DeserializeToken);
-            }
-        },
-        None => {
-            return Err(Error::NoToken);
-        }
-    };
-
-    let api = TwitterApi::new(token);
-
-    let me = match api.get_users_me().send().await {
-        Ok(res) => res.into_data().unwrap(),
-        Err(e) => {
-            println! {"{:?}", e};
-            return Err(Error::GetMeAPI);
-        }
-    };
-
-    let mut bookmarks: Vec<structs::Tweet> = match api
-        .get_user_bookmarks(me.id)
-        .expansions(vec![TweetExpansion::AttachmentsMediaKeys])
-        .media_fields(vec![
-            MediaField::MediaKey,
-            MediaField::Url,
-            MediaField::PreviewImageUrl,
-        ])
-        .send()
-        .await
-    {
-        Ok(res) => res
-            .data()
-            .unwrap_or(&vec![])
-            .iter()
-            .map(|t| structs::Tweet::from(t, res.includes().map(|e| e.media.as_ref()).flatten()))
-            .collect(),
-        Err(e) => {
-            println! {"{:?}", e};
-            return Err(Error::GetLikesAPI);
-        }
-    };
-
-    let mut rng = thread_rng();
-    bookmarks.shuffle(&mut rng);
-
-    Ok(Template::render("list", context! { tweets: bookmarks }))
 }

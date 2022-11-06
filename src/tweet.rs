@@ -1,5 +1,5 @@
 use rocket::serde::{Deserialize, Serialize};
-use twitter_v2::{id::NumericId, Media};
+use twitter_v2::{data::Expansions, Media};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
 #[serde(crate = "rocket::serde")]
@@ -10,7 +10,7 @@ pub struct Tweet {
 }
 
 impl Tweet {
-    pub fn from(tweet: &twitter_v2::Tweet, includes: Option<&Vec<Media>>) -> Self {
+    pub fn from(tweet: &twitter_v2::Tweet, includes: Option<&Expansions>) -> Self {
         let media = match tweet
             .attachments
             .as_ref()
@@ -22,6 +22,9 @@ impl Tweet {
                 .map(|m| {
                     includes
                         .unwrap()
+                        .media
+                        .as_ref()
+                        .unwrap()
                         .iter()
                         .find(|i| i.media_key == *m)
                         .unwrap()
@@ -31,8 +34,19 @@ impl Tweet {
             None => vec![],
         };
 
+        let author = includes
+            .unwrap()
+            .users
+            .as_ref()
+            .unwrap()
+            .iter()
+            .find(|u| u.id == tweet.author_id.unwrap())
+            .unwrap()
+            .username
+            .to_string();
+
         Tweet {
-            author: tweet.author_id.unwrap_or(NumericId::new(0)).to_string(),
+            author: author,
             text: tweet.text.clone(),
             media: media,
         }

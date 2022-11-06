@@ -8,9 +8,10 @@ use twitter_v2::{authorization::Oauth2Client, oauth2::url::Url};
 
 mod cookie;
 mod errors;
+mod list_type;
 mod lists;
 mod oauth;
-mod structs;
+mod tweet;
 
 #[get("/")]
 async fn index() -> Template {
@@ -35,14 +36,7 @@ fn rocket() -> _ {
         .mount("/static", FileServer::from(relative!("static")))
         .mount(
             "/",
-            routes![
-                index,
-                error,
-                oauth::authorize,
-                oauth::callback,
-                lists::likes,
-                lists::bookmarks
-            ],
+            routes![index, error, oauth::authorize, oauth::callback, lists::list,],
         )
         .attach(Template::fairing())
 }
