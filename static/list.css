@@ -32,10 +32,15 @@
     flex-direction: column;
 }
 
-.tweet .image a {
-    margin-top: 1em;
+.tweet .image * {
+    margin-top: .5em;
 }
 
 .tweet .image a img {
     max-width: calc(100vw - 3em);
+}
+
+.tweet .image .unavailable {
+    font-size: 2rem;
+    color: rgb(255, 128, 128);
 }

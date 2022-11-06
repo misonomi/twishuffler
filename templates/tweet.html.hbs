@@ -9,6 +9,8 @@
         <a href={{this.url}} target="_blank">
           <img src={{this.url}} />
         </a>
+      {{else}}
+        <i class="unavailable material-icons">cancel</i>
       {{/if}}
     {{/each}}
   </div>
