@@ -1,5 +1,5 @@
 use rocket::serde::{Deserialize, Serialize};
-use twitter_v2::{data::Expansions, Media, id::NumericId};
+use twitter_v2::{data::Expansions, id::NumericId, Media};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
 #[serde(crate = "rocket::serde")]

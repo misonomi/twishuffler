@@ -3,10 +3,11 @@
   <head>
     <title>Shuffle Your Likes</title>
     <link rel="stylesheet" type="text/css" href="static/index.css">
+    <link rel="stylesheet" type="text/css" href="static/header.css">
     <link rel="stylesheet" type="text/css" href="static/list.css">
   </head>
   <body>
-    {{> header}}
+    {{> header next}}
     <main>
       {{~#each tweets}}
         {{> tweet this}}

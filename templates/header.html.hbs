@@ -3,14 +3,26 @@
         <i class="material-icons">house</i>
         Top
     </a>
-    <a href="/likes">
-        <i class="material-icons">star</i>
-        Likes
-    </a>
-    <a href="/bookmarks">
-        <i class="material-icons">bookmark</i>
-        Bookmarks
-    </a>
+    {{#if likes}}
+        <a class="focused" href="/likes?next={{likes}}">
+            <i class="material-icons">casino</i>
+        </a>
+    {{else}}
+        <a href="/likes">
+            <i class="material-icons">star</i>
+            Likes
+        </a>
+    {{/if}}
+    {{#if bookmarks}}
+        <a class="focused" href="/bookmarks?next={{likes}}">
+            <i class="material-icons">casino</i>
+        </a>
+    {{else}}
+        <a href="/bookmarks">
+            <i class="material-icons">bookmark</i>
+            Bookmarks
+        </a>
+    {{/if}}
     <div></div>
     <a href="https://twitter.com/miso_nomi" target="_blank">苦情窓口</a>
 </header>

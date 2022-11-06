@@ -10,8 +10,12 @@ use twitter_v2::{
 
 use crate::{errors::Error, list_type::ListType, tweet};
 
-#[get("/<listtype>")]
-pub async fn list(listtype: ListType, cookies: &CookieJar<'_>) -> Result<Template, Error> {
+#[get("/<listtype>?<next>")]
+pub async fn list(
+    listtype: ListType,
+    next: Option<&str>,
+    cookies: &CookieJar<'_>,
+) -> Result<Template, Error> {
     let token = match cookies.get_private("token") {
         Some(v) => match serde_json::from_str::<Oauth2Token>(v.value()) {
             Ok(t) => t,
@@ -35,8 +39,9 @@ pub async fn list(listtype: ListType, cookies: &CookieJar<'_>) -> Result<Templat
         }
     };
 
-    let mut likes: Vec<tweet::Tweet> = match listtype
-        .request_builder(api, me.id)
+    let mut builder = listtype.request_builder(api, me.id);
+
+    builder
         .expansions(vec![
             TweetExpansion::AttachmentsMediaKeys,
             TweetExpansion::AuthorId,
@@ -45,16 +50,21 @@ pub async fn list(listtype: ListType, cookies: &CookieJar<'_>) -> Result<Templat
             MediaField::MediaKey,
             MediaField::Url,
             MediaField::PreviewImageUrl,
-        ])
-        .send()
-        .await
-    {
-        Ok(res) => res
-            .data()
-            .unwrap_or(&vec![])
-            .iter()
-            .map(|t| tweet::Tweet::from(t, res.includes()))
-            .collect(),
+        ]);
+
+    if let Some(n) = next {
+        builder.pagination_token(n);
+    }
+
+    let (mut tweets, next): (Vec<tweet::Tweet>, Option<String>) = match builder.send().await {
+        Ok(res) => (
+            res.data()
+                .unwrap_or(&vec![])
+                .iter()
+                .map(|t| tweet::Tweet::from(t, res.includes()))
+                .collect(),
+            res.meta().map(|m| m.next_token.to_owned()).flatten(),
+        ),
         Err(e) => {
             println! {"{:?}", e};
             return Err(Error::GetLikesAPI);
@@ -62,7 +72,17 @@ pub async fn list(listtype: ListType, cookies: &CookieJar<'_>) -> Result<Templat
     };
 
     let mut rng = thread_rng();
-    likes.shuffle(&mut rng);
+    tweets.shuffle(&mut rng);
 
-    Ok(Template::render("list", context! { tweets: likes }))
+    // TODO: find out why match` arms have incompatible types happens
+    match listtype {
+        ListType::Likes => Ok(Template::render(
+            "list",
+            context! { tweets: tweets, next: context! { likes: next }},
+        )),
+        ListType::Bookmarks => Ok(Template::render(
+            "list",
+            context! { tweets: tweets, next: context! { bookmarks: next } },
+        )),
+    }
 }

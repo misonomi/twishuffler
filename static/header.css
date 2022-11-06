@@ -1,0 +1,33 @@
+header {
+    display: grid;
+    grid-template-columns: 2fr 5fr 5fr 1fr 1fr;
+    grid-gap: 2px;
+    
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 3em;
+    width: 100%;
+    padding: .5em;
+    background-color: rgb(29, 50, 72);
+}
+
+header a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(33, 60, 77);
+}
+
+header a.focused {
+    background-color: rgb(50, 103, 172);
+}
+
+header a:hover {
+    background-color: rgb(0, 189, 163);
+    font-weight: 900;
+    color: rgb(67, 3, 77);
+}
