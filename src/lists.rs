@@ -10,10 +10,11 @@ use twitter_v2::{
 
 use crate::{errors::Error, list_type::ListType, tweet};
 
-#[get("/<listtype>?<next>")]
+#[get("/<listtype>?<next>&<skip>")]
 pub async fn list(
     listtype: ListType,
-    next: Option<&str>,
+    mut next: Option<String>,
+    skip: Option<i64>,
     cookies: &CookieJar<'_>,
 ) -> Result<Template, Error> {
     let token = match cookies.get_private("token") {
@@ -39,6 +40,28 @@ pub async fn list(
         }
     };
 
+    for _ in 0..skip.unwrap_or(0) {
+        let mut builder = listtype.request_builder(api.clone(), me.id);
+
+        if let Some(n) = next.clone() {
+            builder.pagination_token(&n);
+        }
+
+        let new_next: Option<String> = match builder.send().await {
+            Ok(res) => res.meta().map(|m| m.next_token.to_owned()).flatten(),
+            Err(e) => {
+                println! {"{:?}", e};
+                return Err(Error::GetLikesAPIPagination);
+            }
+        };
+
+        if let Some(n) = new_next {
+            next = Some(n);
+        } else {
+            break
+        }
+    }
+
     let mut builder = listtype.request_builder(api, me.id);
 
     builder
@@ -53,7 +76,7 @@ pub async fn list(
         ]);
 
     if let Some(n) = next {
-        builder.pagination_token(n);
+        builder.pagination_token(&n);
     }
 
     let (mut tweets, next): (Vec<tweet::Tweet>, Option<String>) = match builder.send().await {

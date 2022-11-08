@@ -14,6 +14,7 @@ pub enum Error {
     RequestTokenAPI,
     GetMeAPI,
     GetLikesAPI,
+    GetLikesAPIPagination,
 }
 
 impl<'a> Error {
@@ -28,6 +29,7 @@ impl<'a> Error {
             Self::RequestTokenAPI => "request_token",
             Self::GetMeAPI => "get_me",
             Self::GetLikesAPI => "get_likes",
+            Self::GetLikesAPIPagination => "get_paginate",
         }
     }
 }

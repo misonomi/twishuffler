@@ -1,0 +1,49 @@
+<header>
+    <a href="/">
+        <i class="material-icons">house</i>
+        Top
+    </a>
+    {{#if likes}}
+        <a class="focused" href="likes?next={{likes}}">
+            <i class="material-icons">history</i>
+        </a>
+    {{else}}
+        <a href="likes">
+            <i class="material-icons">star</i>
+            Likes
+        </a>
+    {{/if}}
+    {{#if bookmarks}}
+        <a class="focused" href="bookmarks?next={{likes}}">
+            <i class="material-icons">history</i>
+        </a>
+    {{else}}
+        <a href="bookmarks">
+            <i class="material-icons">bookmark</i>
+            Bookmarks
+        </a>
+    {{/if}}
+    <button onclick="{ increment_skip() }">
+        <i class="material-icons">add</i>
+        <i class="material-icons">history</i>
+    </button>
+    <a href="https://twitter.com/miso_nomi" target="_blank">苦情窓口</a>
+    <script>
+        var skip = 1;
+
+        function increment_skip () {
+            skip++;
+
+            let focused_elm = document.getElementsByTagName('header')[0].getElementsByClassName('focused')[0];
+            if (focused_elm) {
+                const sp = new URLSearchParams(focused_elm.getAttribute('href'));
+                sp.set('skip', skip)
+                focused_elm.setAttribute('href', sp.toString().replace('%3F', '?'));
+                const child = document.createElement('i');
+                child.className = 'material-icons';
+                child.innerHTML = 'history';
+                focused_elm.appendChild(child);
+            }
+        };
+    </script>
+</header>

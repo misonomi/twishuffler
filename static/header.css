@@ -22,11 +22,23 @@ header a {
     background-color: rgb(33, 60, 77);
 }
 
+header button {
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(29, 81, 81);
+}
+
 header a.focused {
     background-color: rgb(50, 103, 172);
 }
 
-header a:hover {
+header a:hover, header button:hover {
     background-color: rgb(0, 189, 163);
     font-weight: 900;
     color: rgb(67, 3, 77);
