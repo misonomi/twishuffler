@@ -38,8 +38,8 @@ pub fn authorize(client: &State<Oauth2Client>, cookies: &CookieJar<'_>) -> Redir
 
 #[get("/callback?<callback..>")]
 pub async fn callback(
-    client: &State<Oauth2Client>,
     callback: Callback<'_>,
+    client: &State<Oauth2Client>,
     cookies: &CookieJar<'_>,
 ) -> Result<Redirect, Error> {
     match cookies.get_private("state") {

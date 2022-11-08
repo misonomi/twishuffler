@@ -1,6 +1,9 @@
 use rocket::{
+    catch, catchers,
     fs::{relative, FileServer},
-    get, launch, routes, catch, catchers, response::Redirect,
+    get, launch,
+    response::Redirect,
+    routes,
 };
 use rocket_dyn_templates::{context, Template};
 use std::env;

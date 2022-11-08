@@ -58,7 +58,7 @@ pub async fn list(
         if let Some(n) = new_next {
             next = Some(n);
         } else {
-            break
+            break;
         }
     }
 
