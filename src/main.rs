@@ -1,6 +1,6 @@
 use rocket::{
     fs::{relative, FileServer},
-    get, launch, routes,
+    get, launch, routes, catch, catchers, response::Redirect,
 };
 use rocket_dyn_templates::{context, Template};
 use std::env;
@@ -23,6 +23,11 @@ async fn error(reason: &str) -> Template {
     Template::render("top", context! { error: reason })
 }
 
+#[catch(404)]
+fn not_found() -> Redirect {
+    Redirect::to("/error?reason=not_found")
+}
+
 #[launch]
 fn rocket() -> _ {
     let client = Oauth2Client::new(
@@ -33,6 +38,7 @@ fn rocket() -> _ {
 
     rocket::build()
         .manage(client)
+        .register("/", catchers![not_found])
         .mount("/static", FileServer::from(relative!("static")))
         .mount(
             "/",
